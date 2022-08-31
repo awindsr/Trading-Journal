@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.js"></script>
+
+<div style="width:100%;" class="row">
+    <div class="my-4 col"><canvas id="piechart" style="width:100%; height:400px;"></canvas></div>
+    <div class="my-4 col"><canvas id="barchart" style="width:100%; height:400px;"></canvas></div>
+</div>
+
+<script>
+    var ctx = document.getElementById("piechart").getContext("2d")
+    var piechart = new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: {{ winloss_labels | safe }},
+            datasets: [
+                {
+                    label: "Win/Loss ratio",
+                    data: {{ winloss_values | safe  }},
+                    backgroundColor: [
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 99, 132)'
+                    ],
+                }
+            ]
+        },
+        options: {
+            responsive: false
+        }
+    });
+</script>
+<script>
+    var ctx = document.getElementById("barchart").getContext("2d")
+    var barchart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: {{ latest_labels | safe }},
+            datasets: [
+                {
+                    label: 'Lastest trade performance',
+                    data: {{ latest_values | safe }},
+                    backgroundColor: [
+                        'rgb(250, 250, 110)',
+                        'rgb(196, 236, 116)',
+                        'rgb(146, 220, 126)',
+                        'rgb(100, 201, 135)',
+                        'rgb(57, 180, 142)',
+                        'rgb(8, 159, 143)',
+                        'rgb(0, 137, 138)',
+                        'rgb(8, 115, 127)',
+                        'rgb(33, 93, 110)',
+                        'rgb(42, 72, 88)'
+                    ]
+
+                }
+            ]
+        },
+        options: {
+            responsive: false
+        }
+    });
+</script>
+{% endblock %}
+
+
+{% block table %}
+<h3>Open Trades</h3>
+<div class="table-responsive">
+    <table id='data' class='table table-sm table-hover table-bordered'>
+        <thead class="table-dark">
+            <tr>
+                <th>id</th>
+                <th>Date</th>
+                <th>Symbol</th>
+                <th>No. of Shares</th>
+                <th>Buy Price $</th>
+                <th>Position Size $</th>
+                <th>Notes</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trade in opentrades %}
+            <tr>
+                <td>{{ trade.id }}</td>
+                <td>{{ trade.date }}</td>
+                <td>{{ trade.symbol }}</td>
+                <td>{{ trade.num_shares }}</td>
+                <td>{{ trade.buy_price }}</td>
+                <td>{{ trade.position_size }}</td>
+                <td>{{ trade.notes }}</td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <form action="{{ url_for('delete_trade') }}" method="post" class="pull-right">
+                            <input type="hidden" name="id" value="{{ trade.id }}">
+                            <input type="submit" class="btn btn-sm btn-danger" value="Delete">
+                        </form>
+                        <a class="btn btn-sm btn-primary" href="{{ url_for('update_trade', id=trade.id) }}" role="button">Edit</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<h3>Closed Trades</h3>
+<div class="table-responsive">
+    <table id='data' class='table table-sm table-hover table-bordered'>
+        <thead class="table-dark">
+            <tr>
+                <th>id</th>
+                <th>Date</th>
+                <th>Symbol</th>
+                <th>No. of Shares</th>
+                <th>Buy Price $</th>
+                <th>Position Size $</th>
+                <th>Sell Date</th>
+                <th>Sell Price $</th>
+                <th>Profit/Loss $</th>
+                <th>ROI %</th>
+                <th>Notes</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for trade in closedtrades %}
+                <tr>
+                    <td>{{ trade.id }}</td>
+                    <td>{{ trade.date }}</td>
+                    <td>{{ trade.symbol }}</td>
+                    <td>{{ trade.num_shares }}</td>
+                    <td>{{ trade.buy_price }}</td>
+                    <td>{{ trade.position_size }}</td>
+                    <td>{{ trade.sell_date }}</td>
+                    <td>{{ trade.sell_price }}</td>
+                    <td>{{ trade.net_pnl }}</td>
+                    <td>{{ trade.net_roi }}</td>
+                    <td>{{ trade.notes }}</td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <form action="{{ url_for('delete_trade') }}" method="post" class="pull-right">
+                                <input type="hidden" name="id" value="{{ trade.id }}">
+                                <input type="submit" class="btn btn-sm btn-danger" value="Delete">
+                            </form>
+                            <a class="btn btn-sm btn-primary" href="{{ url_for('update_trade', id=trade.id) }}" role="button">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

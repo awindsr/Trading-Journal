@@ -1,0 +1,23 @@
+{
+    "name": "Trading Journal",
+    "description": "A simple trade journal and market review app built with Python Flask.",
+    "repository": "https://github.com/awindsr/Trading-Journal",
+    "keywords": [
+      "Flask",
+      "Trading",
+      "python"
+    ],
+    "image": "heroku/python",
+    "env": {
+      "DEBUG": "True",
+      "ALLOWED_HOSTS": {
+        "value": ".herokuapp.com"
+      }
+    },
+    "buildpacks": [
+      {
+        "url": "https://github.com/heroku/heroku-buildpack-python.git"
+      }
+    ],
+    "success_url": "/"
+  }
