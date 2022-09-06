@@ -6,13 +6,7 @@
       "Flask",
       "Trading",
       "python"
-    ],
-    "image": "heroku/python",
-    "env": {
-      "DEBUG": "True",
-      "ALLOWED_HOSTS": {
-        "value": ".herokuapp.com"
-      }
+    ]
     },
     "buildpacks": [
       {
